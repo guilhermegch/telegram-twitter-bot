@@ -1,0 +1,17 @@
+### Database ###
+database
+*.db
+
+### Python ###
+# Byte-compiled / optimized / DLL files
+__pycache__/
+
+# Loging stuff:
+*.log
+
+# Environments
+.env
+venv
+
+# Test folder
+test
