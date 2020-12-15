@@ -57,4 +57,21 @@ def check_user_database(username):
             return True
     
     conn.close()
+
+def list_users_database():
+    usernames = []
     
+    conn = sqlite3.connect('file:database/data.db?mode=ro', uri=True)
+    cursor = conn.cursor()
+    cursor.execute("""SELECT username FROM users""")
+    
+    # Put usernames on a list
+    for user in cursor.fetchall():
+        usernames.append(user[0])
+    
+    # Join the list elements to create a unique message
+    message = '\n'.join(usernames)
+
+    conn.close()
+    
+    return message

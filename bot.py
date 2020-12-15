@@ -6,7 +6,7 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Callb
 
 from settings.settings import TELEGRAM_TOKEN
 from src.twitter import check_user, get_user_data
-from src.database import create_user_db, check_user_database
+from src.database import create_user_db, check_user_database, list_users_database
 
 # Enable logging
 logging.basicConfig(
@@ -32,7 +32,8 @@ def help_command(update: Update, context: CallbackContext) -> None:
         'This bot receive live tweets from an user on Telegram \n\n'
         'Availabe commands: \n'
         '/cancel : Cancel the current operation \n'
-        '/add_user <username>: Adds a new user to the database'
+        '/add_user <username>: Adds a new user to the database\n'
+        '/list_users: Shows the users added to database'
     )
 
 def tester(update: Update, context: CallbackContext):
@@ -126,6 +127,11 @@ def cancel(update: Update, context: CallbackContext) -> int:
 
     return ConversationHandler.END
 
+def list_users(update: Update, context: CallbackContext):
+    '''Return the users in database'''
+    update.message.reply_text('Checking added users...')
+    update.message.reply_text(list_users_database())
+    
 def main():
     """Start the bot."""
     updater = Updater(TELEGRAM_TOKEN)
@@ -134,18 +140,18 @@ def main():
     dispatcher = updater.dispatcher
 
     # on different commands - answer in Telegram
-    dispatcher.add_handler(CommandHandler("start", start))
-    dispatcher.add_handler(CommandHandler("help", help_command))
-
     create_user = ConversationHandler(
         entry_points = [CommandHandler("add_user", add_user)],
         states = {
             CONFIRM: [MessageHandler(Filters.regex('^(Yes|No)'), confirm_user)]
         },
-        fallbacks = [CommandHandler('cancel', cancel)]
+        fallbacks = [CommandHandler("cancel", cancel)]
     )
 
+    dispatcher.add_handler(CommandHandler("start", start))
+    dispatcher.add_handler(CommandHandler("help", help_command))
     dispatcher.add_handler(create_user)
+    dispatcher.add_handler(CommandHandler("list_users", list_users))
     
     # on noncommand i.e message - echo the message on Telegram
 
