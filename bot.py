@@ -6,7 +6,7 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Callb
 
 from settings.settings import TELEGRAM_TOKEN
 from src.twitter import check_user, get_user_data
-from src.database import create_user_db, check_user_database, list_users_database
+from src.database import create_user_db, check_user_database, list_users_database, edit_user_database
 
 # Enable logging
 logging.basicConfig(
@@ -33,7 +33,8 @@ def help_command(update: Update, context: CallbackContext) -> None:
         'Availabe commands: \n'
         '/cancel : Cancel the current operation \n'
         '/add_user <username>: Adds a new user to the database\n'
-        '/list_users: Shows the users added to database'
+        '/list_users: Shows the users added to database\n'
+        '/edit_user: Edits an username on the database'
     )
 
 def tester(update: Update, context: CallbackContext):
@@ -131,7 +132,41 @@ def list_users(update: Update, context: CallbackContext):
     '''Return the users in database'''
     update.message.reply_text('Checking added users...')
     update.message.reply_text(list_users_database())
+
+def edit_user(update: Update, context: CallbackContext):
+    '''Edit user in database'''
+    try:
+        username = context.args[0]
+        new_name = context.args[1]
+        
+        # Check if user exists
+        if not check_user_database(username):
+            update.message.reply_text('User not founded on database')
+            return
+
+        # Check if user exists on Twitter
+        if not check_user(new_name):
+            update.message.reply_text(f'{new_name} not founded on Twitter')
+            return
+
+        # Get user data
+        message = get_user_data(new_name)
+        
+        reply = 'Name: ' + message['name'] + '\nBio: '+ message['bio']
+        
+        update.message.reply_text('This is the new user:')
+        update.message.reply_text(reply)
+        update.message.reply_photo(message['profile_image'])
+        
+        edit_user_database(username, new_name)
+        
+        update.message.reply_text(f'User edited: {username} now is {new_name}')
+
     
+    except (IndexError, ValueError):
+        update.message.reply_text('Usage: /edit_user <username> <new name>')
+        return
+
 def main():
     """Start the bot."""
     updater = Updater(TELEGRAM_TOKEN)
@@ -152,6 +187,7 @@ def main():
     dispatcher.add_handler(CommandHandler("help", help_command))
     dispatcher.add_handler(create_user)
     dispatcher.add_handler(CommandHandler("list_users", list_users))
+    dispatcher.add_handler(CommandHandler("edit_user", edit_user))
     
     # on noncommand i.e message - echo the message on Telegram
 

@@ -51,7 +51,6 @@ def check_user_database(username):
     cursor.execute("""SELECT username FROM users""")
 
     for user in cursor.fetchall():
-        print(user[0])
         if user[0] == username:
             conn.close()
             return True
@@ -75,3 +74,17 @@ def list_users_database():
     conn.close()
     
     return message
+
+def edit_user_database(username, new_name):
+    query = """UPDATE users SET username = ? where username = ?"""
+
+    conn = sqlite3.connect('database/data.db')
+    cursor = conn.cursor()
+
+    data = (new_name, username)
+
+    cursor.execute(query, data)
+    conn.commit()     
+    logging.info(f'{username} edited in database to {new_name}')
+
+    conn.close()
