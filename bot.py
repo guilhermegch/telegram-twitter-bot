@@ -6,7 +6,7 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Callb
 
 from settings.settings import TELEGRAM_TOKEN
 from src.twitter import check_user, get_user_data
-from src.database import create_user_db
+from src.database import create_user_db, check_user_database
 
 # Enable logging
 logging.basicConfig(
@@ -81,6 +81,17 @@ def confirm_user(update: Update, context: CallbackContext):
     if CONFIRM == 'Yes':
         with open('cache.txt', 'r') as cache:
             username = cache.readline()
+        
+        # Check if user already exists
+        if check_user_database(username):
+            update.message.reply_text(
+                f'User {username} already exists.',
+                reply_markup = ReplyKeyboardRemove()
+            )
+            os.remove('cache.txt')
+            logging.info('Cache file deleted')
+            return ConversationHandler.END
+
         update.message.reply_text(
             f'Adding {username} to database...',
             reply_markup = ReplyKeyboardRemove()

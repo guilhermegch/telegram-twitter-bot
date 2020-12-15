@@ -44,3 +44,17 @@ def create_user_db(username):
     conn.close()
     
     logging.info('New user added to database')
+
+def check_user_database(username):
+    conn = sqlite3.connect('file:database/data.db?mode=ro', uri=True)
+    cursor = conn.cursor()
+    cursor.execute("""SELECT username FROM users""")
+
+    for user in cursor.fetchall():
+        print(user[0])
+        if user[0] == username:
+            conn.close()
+            return True
+    
+    conn.close()
+    
