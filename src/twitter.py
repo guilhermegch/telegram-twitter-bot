@@ -1,15 +1,21 @@
 import tweepy
 import logging
 
-from settings.settings import API_KEY, API_SECRET_KEY, ACCESS_TOKEN, ACCESS_TOKEN_SECRET
+from settings.settings import (
+    API_KEY, 
+    API_SECRET_KEY, 
+    ACCESS_TOKEN, 
+    ACCESS_TOKEN_SECRET,
+)
 
 # Set Tweepy
 auth = tweepy.OAuthHandler(API_KEY, API_SECRET_KEY)
 auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
 api = tweepy.API(auth)
 
+
 def check_user(username):
-    '''Check if the user exists'''
+    """Check if the user exists"""
     try:
         result = api.get_user(username)
 
@@ -23,8 +29,9 @@ def check_user(username):
         else: 
             raise Exception('Unknown error')
 
+
 def get_user_data(username):
-    '''Get the user first data'''
+    """Get the user first data"""
     result = api.get_user(username)
 
     name = result._json['name']

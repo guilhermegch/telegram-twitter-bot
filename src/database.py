@@ -19,9 +19,9 @@ def create_database():
         conn.close()
     return
 
-# Records a new user on table
+
 def create_user_db(username):
-    
+    """Records a new user on table"""
     create_database()
 
     # Gets the date
@@ -45,7 +45,9 @@ def create_user_db(username):
     
     logging.info('New user added to database')
 
+
 def check_user_database(username):
+    """Check if user exists on database"""
     conn = sqlite3.connect('file:database/data.db?mode=ro', uri=True)
     cursor = conn.cursor()
     cursor.execute("""SELECT username FROM users""")
@@ -57,7 +59,9 @@ def check_user_database(username):
     
     conn.close()
 
+
 def list_users_database():
+    """List the users on database"""
     usernames = []
     
     conn = sqlite3.connect('file:database/data.db?mode=ro', uri=True)
@@ -75,7 +79,9 @@ def list_users_database():
     
     return message
 
+
 def edit_user_database(username, new_name):
+    """Edit an user on database"""
     query = """UPDATE users SET username = ? where username = ?"""
 
     conn = sqlite3.connect('database/data.db')
@@ -88,6 +94,7 @@ def edit_user_database(username, new_name):
     logging.info(f'{username} edited in database to {new_name}')
 
     conn.close()
+
 
 def delete_user_database(username):
     query = """DELETE FROM users WHERE username = ?"""
