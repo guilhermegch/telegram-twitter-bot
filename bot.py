@@ -6,7 +6,7 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Callb
 
 from settings.settings import TELEGRAM_TOKEN
 from src.twitter import check_user, get_user_data
-from src.database import create_user_db, check_user_database, list_users_database, edit_user_database
+from src.database import create_user_db, check_user_database, list_users_database, edit_user_database, delete_user_database
 
 # Enable logging
 logging.basicConfig(
@@ -34,7 +34,8 @@ def help_command(update: Update, context: CallbackContext) -> None:
         '/cancel : Cancel the current operation \n'
         '/add_user <username>: Adds a new user to the database\n'
         '/list_users: Shows the users added to database\n'
-        '/edit_user: Edits an username on the database'
+        '/edit_user: Edits an username on the database\n'
+        '/del_user: Remove user from database'
     )
 
 def tester(update: Update, context: CallbackContext):
@@ -167,6 +168,24 @@ def edit_user(update: Update, context: CallbackContext):
         update.message.reply_text('Usage: /edit_user <username> <new name>')
         return
 
+def delete_user(update: Update, context: CallbackContext):
+    '''Delete user from database'''
+    try:
+        username = context.args[0]
+
+        # Check if user exists
+        if not check_user_database(username):
+            update.message.reply_text('User not founded on database')
+            return
+
+        update.message.reply_text('Deleting user...')
+        delete_user_database(username)
+        update.message.reply_text(f'{username} deleted from database')
+
+    except (IndexError, ValueError):
+        update.message.reply_text('Usage: /del_user <username>')
+        return
+
 def main():
     """Start the bot."""
     updater = Updater(TELEGRAM_TOKEN)
@@ -188,6 +207,7 @@ def main():
     dispatcher.add_handler(create_user)
     dispatcher.add_handler(CommandHandler("list_users", list_users))
     dispatcher.add_handler(CommandHandler("edit_user", edit_user))
+    dispatcher.add_handler(CommandHandler("del_user", delete_user))
     
     # on noncommand i.e message - echo the message on Telegram
 

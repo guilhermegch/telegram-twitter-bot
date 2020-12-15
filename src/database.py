@@ -88,3 +88,16 @@ def edit_user_database(username, new_name):
     logging.info(f'{username} edited in database to {new_name}')
 
     conn.close()
+
+def delete_user_database(username):
+    query = """DELETE FROM users WHERE username = ?"""
+    username = (username,)
+
+    conn = sqlite3.connect('database/data.db')
+    cursor = conn.cursor()
+
+    cursor.execute(query, username)
+    conn.commit()
+    logging.info(f'The user {username} was deleted from database')
+
+    conn.close()
