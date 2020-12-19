@@ -142,7 +142,8 @@ def confirm_user(update: Update, context: CallbackContext):
 def list_users(update: Update, context: CallbackContext):
     """Return the users in database"""
     update.message.reply_text('Checking added users...')
-    update.message.reply_text(list_users_database())
+    message = '\n'.join(list_users_database())
+    update.message.reply_text(message)
 
 
 def edit_user(update: Update, context: CallbackContext):

@@ -72,12 +72,9 @@ def list_users_database():
     for user in cursor.fetchall():
         usernames.append(user[0])
     
-    # Join the list elements to create a unique message
-    message = '\n'.join(usernames)
-
     conn.close()
     
-    return message
+    return usernames
 
 
 def edit_user_database(username, new_name):
