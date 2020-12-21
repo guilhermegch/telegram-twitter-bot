@@ -92,7 +92,7 @@ def add_user(update: Update, context: CallbackContext):
         return CONFIRM
 
     except (IndexError, ValueError):
-        update.message.reply_text('Usage: /add_user <username>')
+        update.message.reply_text('Usage: /adduser <username>')
         return
 
 
