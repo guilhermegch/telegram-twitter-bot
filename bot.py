@@ -1,5 +1,4 @@
 import logging
-import os
 
 from telegram.ext import (
     Updater, 
@@ -46,7 +45,9 @@ def main():
     dispatcher.add_handler(CommandHandler("listusers", list_users))
     dispatcher.add_handler(CommandHandler("edituser", edit_user))
     dispatcher.add_handler(CommandHandler("deleteuser", delete_user))
-    
+    dispatcher.add_handler(CommandHandler("startstream", start_stream))
+    dispatcher.add_handler(CommandHandler("stopstream", stop_stream))
+
     # Start the Bot
     updater.start_polling()
 

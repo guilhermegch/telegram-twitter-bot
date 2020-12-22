@@ -1,5 +1,7 @@
 import logging
 import os
+import subprocess
+import signal
 
 from telegram import (
     Update, 
@@ -200,3 +202,45 @@ def delete_user(update: Update, context: CallbackContext):
     except (IndexError, ValueError):
         update.message.reply_text('Usage: /deleteuser <username>')
         return
+
+
+def start_stream(update: Update, context: CallbackContext):
+    """Start to stream the tweets"""
+    # Check if the process is already running
+    process = subprocess.run(['pgrep', 'python', '-a'], capture_output = True)
+    out = str(process.stdout).split(' ')
+    if 'stream.py' in out:
+        update.message.reply_text('Already streaming...')
+        return
+    chat_id = str(update.message.chat.id)
+
+    update.message.reply_text('Starting the stream...')
+
+    stream = subprocess.Popen(['python', 'stream.py', chat_id])
+    
+    logging.info(f'{update.message.from_user.username} started the stream')
+
+
+def stop_stream(update: Update, context: CallbackContext):
+    """Stop the tweets streaming"""
+    # Check if the process is running
+    data = subprocess.run(
+        ['pgrep', 'python', '-a'], 
+        capture_output = True, 
+        text = True
+    )
+    out = data.stdout.split('\n')
+
+    for processes in out:
+        if 'stream.py' in processes:
+            pid = processes.split(' ')[0]
+            os.kill(int(pid), signal.SIGTERM)
+
+            update.message.reply_text('Stream stopped...')
+
+            logging.info(
+                f'{update.message.from_user.username} stopped the stream'
+            )
+            return
+    update.message.reply_text('Stream not running')
+
