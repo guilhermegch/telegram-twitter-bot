@@ -18,6 +18,7 @@ from telegram.ext import (
 )
 from src.twitter import check_user, get_user_data
 from src.database import (
+    create_database,
     create_user_db, 
     check_user_database, 
     list_users_database, 
@@ -35,6 +36,7 @@ def start(update: Update, context: CallbackContext) -> None:
         "Hi! I'm a Twitter bot!\n"
         'Send /help to show the commands.'
         )
+    create_database()
 
 
 def help_command(update: Update, context: CallbackContext) -> None:
