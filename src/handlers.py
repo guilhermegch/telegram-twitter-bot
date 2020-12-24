@@ -46,6 +46,8 @@ def help_command(update: Update, context: CallbackContext) -> None:
         '/listusers - Shows the users added to database\n'
         '/edituser - Edits an username on the database\n'
         '/deleteuser - Remove user from database\n'
+        '/startstream - Starts the tweet stream\n'
+        '/stopstream - Stops the tweet stream\n'
         '/cancel - Cancel the current operation',
     )
 
