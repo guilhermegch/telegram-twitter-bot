@@ -1,6 +1,7 @@
 import tweepy
 import sys
 import logging
+from tweepy.error import TweepError
 
 from settings.settings import (
     API_KEY,
@@ -27,8 +28,12 @@ user_list = []
 ids_list = []
 
 for user in list_users_database():
-    user_list.append(user)
-    ids_list.append(api.get_user(user)._json['id_str'])
+    try:
+        user_list.append(user)
+        ids_list.append(api.get_user(user)._json['id_str'])
+    except TweepError as error:
+        mensagem = f'Error on user: {user} ' + error.response.text
+        updater.bot.sendMessage(chat_id = chat_id, text = mensagem)
 
 ids = ','.join(ids_list)
 
