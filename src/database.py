@@ -6,7 +6,6 @@ import logging
 # Check if database exists
 def create_database():
     if not os.path.exists('database/data.db'):
-        os.mkdir('database')
         conn = sqlite3.connect('database/data.db')
         cursor = conn.cursor()
         cursor.execute(
@@ -22,8 +21,6 @@ def create_database():
 
 def create_user_db(username):
     """Records a new user on table"""
-    create_database()
-
     # Gets the date
     data = datetime.datetime.utcnow()
 
