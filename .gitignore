@@ -17,3 +17,6 @@ test
 
 # VSCode
 .vscode
+
+# Shell script
+*.sh
