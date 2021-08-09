@@ -21,7 +21,7 @@ pip install -r requirements.txt
 ```
 
 ### Twitter and Telegram keys ###
-Go to the settings folder and fill a `.env` file with your Twitter Standard v1.1 and Telegram Bot keys following the `.env_example` file.
+Go to the settings folder and fill a `.env` file with your Twitter Standard v1.1 and Telegram Bot keys following the `.env_example` file. On the first start of the bot, he will send your chat id on the message, to put on the `.env` file.
 
 ### SQLite ###
 The database will be created by running the bot and adding the first username.

@@ -31,7 +31,8 @@ CONFIRM = 0
 # Define handlers
 def start(update: Update, context: CallbackContext) -> None:
     """Start the bot"""
-    update.message.reply_text("This is a private bot")
+    chat_id = str(update.message.chat.id)
+    update.message.reply_text(f"This is a private bot. Chat ID: {chat_id}")
 
 
 def help_command(update: Update, context: CallbackContext) -> None:
