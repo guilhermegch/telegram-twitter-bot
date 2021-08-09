@@ -32,11 +32,7 @@ CONFIRM = 0
 # Define handlers
 def start(update: Update, context: CallbackContext) -> None:
     """Start the bot"""
-    update.message.reply_text(
-        "Hi! I'm a Twitter bot!\n"
-        'Send /help to show the commands.'
-        )
-    create_database()
+    update.message.reply_text("This is a private bot")
 
 
 def help_command(update: Update, context: CallbackContext) -> None:
